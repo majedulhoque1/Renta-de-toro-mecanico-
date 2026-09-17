@@ -30,7 +30,8 @@ function Leads() {
     <div>
       <PageHeader title="Leads" sub={`${activeLeads.length} active`} />
 
-      <div className="flex gap-3 overflow-x-auto px-6 py-6">
+      {/* Desktop/tablet kanban board */}
+      <div className="hidden gap-3 overflow-x-auto px-6 py-6 md:flex">
         {PIPELINE_COLUMNS.map((status) => {
           const leads = activeLeads.filter((l) => l.status === status)
           return (
@@ -70,6 +71,52 @@ function Leads() {
             </div>
           )
         })}
+      </div>
+
+      {/* Mobile stacked-by-stage list */}
+      <div className="flex flex-col gap-6 px-6 py-6 md:hidden">
+        {PIPELINE_COLUMNS.map((status) => {
+          const leads = activeLeads.filter((l) => l.status === status)
+          if (leads.length === 0) return null
+          return (
+            <div key={status}>
+              <div className="mb-2 flex items-center justify-between px-1">
+                <span className="text-xs font-bold tracking-wide text-[#1c1712]/60 uppercase">{COLUMN_LABELS[status]}</span>
+                <span className="text-xs font-bold text-[#1c1712]/40">{leads.length}</span>
+              </div>
+              <div className="flex flex-col gap-2">
+                {leads.map((lead) => {
+                  const customer = findCustomer(data, lead.customerId)
+                  return (
+                    <Link
+                      key={lead.id}
+                      to="/os/leads/$id"
+                      params={{ id: lead.id }}
+                      className="block rounded-xl border border-black/10 bg-white p-4"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="font-semibold">{customer?.name ?? '—'}</span>
+                        {lead.eventDate && <span className="text-xs font-semibold text-[#b5701c]">{lead.eventDate}</span>}
+                      </div>
+                      <div className="mt-0.5 text-xs capitalize text-[#1c1712]/55">{lead.eventType.replace('_', ' ')}</div>
+                      <select
+                        value={lead.status}
+                        onChange={(e) => { e.stopPropagation(); updateLeadStatus(lead.id, e.target.value as LeadStatus) }}
+                        onClick={(e) => e.preventDefault()}
+                        className="mt-2 w-full rounded-md border border-black/10 bg-[#f4f1ea] px-1.5 py-1.5 text-xs font-semibold"
+                      >
+                        {LEAD_STATUSES.map((s) => (
+                          <option key={s} value={s}>{COLUMN_LABELS[s]}</option>
+                        ))}
+                      </select>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+        {activeLeads.length === 0 && <div className="py-10 text-center text-sm text-[#1c1712]/50">No active leads.</div>}
       </div>
 
       {closedLeads.length > 0 && (
