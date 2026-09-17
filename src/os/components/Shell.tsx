@@ -12,7 +12,7 @@ const NAV = [
   { to: '/os/settings', label: 'Settings', shortLabel: 'Settings', icon: 'gear', exact: false },
 ] as const
 
-type IconName = (typeof NAV)[number]['icon'] | 'horns'
+type IconName = (typeof NAV)[number]['icon'] | 'horns' | 'logout'
 
 function NavIcon({ name, className }: { name: IconName; className?: string }) {
   const props = {
@@ -83,6 +83,13 @@ function NavIcon({ name, className }: { name: IconName; className?: string }) {
           <circle cx="12" cy="16.5" r="1.4" fill="currentColor" stroke="none" />
         </svg>
       )
+    case 'logout':
+      return (
+        <svg {...props}>
+          <path d="M15 4H6a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h9" />
+          <path d="M11 12h9m0 0-3-3m3 3-3 3" />
+        </svg>
+      )
   }
 }
 
@@ -91,6 +98,27 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-[#1c1712]">
+      {/* Mobile top bar — sidebar (brand + logout) is hidden below md */}
+      <div
+        className="flex items-center justify-between border-b border-black/10 bg-[#f4f1ea]/95 px-4 py-3 backdrop-blur-sm md:hidden"
+        style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b5701c] text-white">
+            <NavIcon name="horns" className="h-[15px] w-[15px]" />
+          </span>
+          <span className="font-display text-base leading-none font-black text-[#1c1712]">Filix OS</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => { clearSession(); window.location.href = '/login' }}
+          aria-label="Log out"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1c1712]/50 transition hover:bg-black/5 hover:text-[#1c1712]"
+        >
+          <NavIcon name="logout" className="h-[18px] w-[18px]" />
+        </button>
+      </div>
+
       <div className="mx-auto flex max-w-[1400px]">
         {/* Sidebar — desktop only */}
         <aside className="hidden w-60 shrink-0 flex-col border-r border-black/10 px-4 py-6 md:flex">
