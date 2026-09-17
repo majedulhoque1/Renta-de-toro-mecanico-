@@ -1,0 +1,76 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+
+/* Filix — fixed warm, photo-led palette. Real event photography carries the
+   page (Samir's brief: "video/photo > text"); the palette exists to frame
+   it, not compete with it. No light/dark toggle — this is a marketing site
+   with one deliberate mood, not an app. */
+@theme {
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --ink: #16110c;        /* near-black warm ground, never pure black */
+  --paper: #f7f1e6;      /* warm bone for light sections */
+  --paper-dim: #ece2cd;
+  --cream: #f3ead9;      /* text on dark */
+  --cream-dim: #cabfa9;
+  --ember: #e0912f;      /* single accent, drawn from the real golden-hour photos */
+  --ember-deep: #b5701c;
+  --line: rgba(243, 234, 217, 0.14);
+}
+
+body {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--ember);
+  color: var(--ink);
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-xl border border-[var(--ink)]/15 px-3.5 py-2.5 text-[var(--ink)];
+    @apply outline-none transition focus:border-[var(--ember)];
+  }
+}
+
+/* react-day-picker ships CSS-variable hooks on .rdp-root — retheme through
+   those instead of guessing its internal class names. */
+.filix-calendar.rdp-root {
+  --rdp-accent-color: var(--ember);
+  --rdp-accent-background-color: color-mix(in srgb, var(--ember) 14%, transparent);
+  --rdp-today-color: var(--ember-deep);
+  --rdp-day_button-border-radius: 10px;
+  --rdp-outside-opacity: 0.35;
+  margin: 0;
+  font-family: var(--font-sans);
+}
+.filix-calendar .rdp-day_button {
+  font-weight: 600;
+  color: var(--ink);
+}
+.filix-calendar .rdp-selected .rdp-day_button {
+  background: var(--ember);
+  color: var(--ink);
+  border-color: var(--ember);
+}
+.filix-calendar .rdp-month_caption {
+  font-family: var(--font-display);
+  font-weight: 800;
+  color: var(--ink);
+}
+.filix-calendar .rdp-weekday {
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  font-weight: 700;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+.filix-calendar .rdp-button_next,
+.filix-calendar .rdp-button_previous {
+  color: var(--ink);
+}
