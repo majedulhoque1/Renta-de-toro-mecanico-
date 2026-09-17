@@ -66,7 +66,7 @@ function CalendarPage() {
       />
 
       <div className="px-6 py-6">
-        <div className="grid grid-cols-7 gap-px overflow-hidden rounded-xl border border-black/10 bg-black/10 text-xs">
+        <div className="hidden grid-cols-7 gap-px overflow-hidden rounded-xl border border-black/10 bg-black/10 text-xs md:grid">
           {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
             <div key={d} className="bg-[#f4f1ea] px-2 py-1.5 text-center font-bold text-[#1c1712]/50">{d}</div>
           ))}
@@ -98,6 +98,48 @@ function CalendarPage() {
               </div>
             )
           })}
+        </div>
+
+        <div className="flex flex-col gap-2 md:hidden">
+          {cells
+            .filter((day): day is number => day !== null && (byDay.get(cellKey(year, month, day))?.length ?? 0) > 0)
+            .map((day) => {
+              const key = cellKey(year, month, day)
+              const bookings = byDay.get(key)!
+              const isToday = key === today
+              return (
+                <div key={day} className="rounded-xl border border-black/10 bg-white p-3">
+                  <div className="mb-1.5 flex items-center gap-2 text-sm font-bold">
+                    {isToday ? (
+                      <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#b5701c] text-xs text-white">{day}</span>
+                    ) : (
+                      <span>{day}</span>
+                    )}
+                    <span className="text-[#1c1712]/50">
+                      {new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short' }).format(new Date(year, month, day))}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    {bookings.map((b) => {
+                      const customer = findCustomer(data, b.customerId)
+                      return (
+                        <Link
+                          key={b.id}
+                          to="/os/bookings/$id"
+                          params={{ id: b.id }}
+                          className="rounded-lg bg-[#b5701c]/10 px-2 py-1.5 text-sm font-semibold text-[#b5701c]"
+                        >
+                          {customer?.name}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          {cells.every((day) => day === null || (byDay.get(cellKey(year, month, day))?.length ?? 0) === 0) && (
+            <div className="py-10 text-center text-sm text-[#1c1712]/50">No bookings this month.</div>
+          )}
         </div>
       </div>
     </div>

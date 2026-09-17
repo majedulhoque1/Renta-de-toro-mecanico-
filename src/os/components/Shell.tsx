@@ -3,13 +3,13 @@ import { Link, useLocation } from '@tanstack/react-router'
 import { clearSession } from '../auth'
 
 const NAV = [
-  { to: '/os', label: 'Dashboard', exact: true },
-  { to: '/os/leads', label: 'Leads' },
-  { to: '/os/bookings', label: 'Bookings' },
-  { to: '/os/calendar', label: 'Calendar' },
-  { to: '/os/customers', label: 'Customers' },
-  { to: '/os/payments', label: 'Payments' },
-  { to: '/os/settings', label: 'Settings' },
+  { to: '/os', label: 'Dashboard', shortLabel: 'Home', exact: true },
+  { to: '/os/leads', label: 'Leads', shortLabel: 'Leads' },
+  { to: '/os/bookings', label: 'Bookings', shortLabel: 'Bookings' },
+  { to: '/os/calendar', label: 'Calendar', shortLabel: 'Cal' },
+  { to: '/os/customers', label: 'Customers', shortLabel: 'Clients' },
+  { to: '/os/payments', label: 'Payments', shortLabel: 'Pay' },
+  { to: '/os/settings', label: 'Settings', shortLabel: 'Settings' },
 ]
 
 export function Shell({ children }: { children: React.ReactNode }) {
@@ -56,18 +56,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Mobile bottom tab bar */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t border-black/10 bg-[#f4f1ea] md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-black/10 bg-[#f4f1ea] md:hidden">
         {NAV.map((item) => {
           const active = item.exact ? pathname === item.to : pathname.startsWith(item.to)
           return (
             <Link
               key={item.to}
               to={item.to}
-              className={`flex-1 whitespace-nowrap px-3 py-3 text-center text-[11px] font-bold ${
+              className={`min-w-0 flex-1 truncate px-0.5 py-3 text-center text-[10px] font-bold ${
                 active ? 'text-[#b5701c]' : 'text-[#1c1712]/50'
               }`}
             >
-              {item.label}
+              {item.shortLabel}
             </Link>
           )
         })}

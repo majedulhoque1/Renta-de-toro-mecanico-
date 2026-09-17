@@ -17,8 +17,8 @@ function Customers() {
         <EmptyState text="No customers yet." />
       ) : (
         <div className="px-6 py-6">
-          <div className="overflow-hidden rounded-xl border border-black/10 bg-white">
-            <table className="w-full text-sm">
+          <div className="hidden overflow-x-auto rounded-xl border border-black/10 bg-white md:block">
+            <table className="w-full min-w-[480px] text-sm">
               <thead>
                 <tr className="border-b border-black/10 text-left text-xs font-bold tracking-wide text-[#1c1712]/50 uppercase">
                   <th className="px-4 py-3">Name</th>
@@ -48,6 +48,31 @@ function Customers() {
                 })}
               </tbody>
             </table>
+          </div>
+
+          <div className="flex flex-col gap-3 md:hidden">
+            {sorted.map((c) => {
+              const { bookings, totalRevenue } = customerHistory(data, c.id)
+              return (
+                <Link
+                  key={c.id}
+                  to="/os/customers/$id"
+                  params={{ id: c.id }}
+                  className="block rounded-xl border border-black/10 bg-white p-4"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">{c.name}</span>
+                    {bookings.length > 1 && (
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">repeat</span>
+                    )}
+                  </div>
+                  <div className="mt-1 text-xs text-[#1c1712]/60">{c.phone}</div>
+                  <div className="mt-2 text-sm tabular-nums text-[#1c1712]/70">
+                    {bookings.length} event{bookings.length === 1 ? '' : 's'} · <span className="font-semibold text-[#1c1712]">${totalRevenue.toLocaleString()}</span>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

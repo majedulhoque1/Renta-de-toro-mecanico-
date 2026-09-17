@@ -17,8 +17,8 @@ function Bookings() {
         <EmptyState text="No bookings yet." />
       ) : (
         <div className="px-6 py-6">
-          <div className="overflow-hidden rounded-xl border border-black/10 bg-white">
-            <table className="w-full text-sm">
+          <div className="hidden overflow-x-auto rounded-xl border border-black/10 bg-white md:block">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b border-black/10 text-left text-xs font-bold tracking-wide text-[#1c1712]/50 uppercase">
                   <th className="px-4 py-3">Customer</th>
@@ -52,6 +52,34 @@ function Bookings() {
                 })}
               </tbody>
             </table>
+          </div>
+
+          <div className="flex flex-col gap-3 md:hidden">
+            {sorted.map((b) => {
+              const customer = findCustomer(data, b.customerId)
+              const { status: payStatus } = paymentStatus(data, b)
+              return (
+                <Link
+                  key={b.id}
+                  to="/os/bookings/$id"
+                  params={{ id: b.id }}
+                  className="block rounded-xl border border-black/10 bg-white p-4"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <span className="font-semibold">{customer?.name}</span>
+                    <span className="tabular-nums font-semibold">${b.total.toLocaleString()}</span>
+                  </div>
+                  <div className="mt-1 text-xs capitalize text-[#1c1712]/60">
+                    {b.eventType.replace('_', ' ')} ·{' '}
+                    {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(b.startAt))}
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <StatusBadge status={b.status} />
+                    <StatusBadge status={payStatus} />
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}
