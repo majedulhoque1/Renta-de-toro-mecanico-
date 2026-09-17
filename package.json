@@ -18,6 +18,7 @@
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-start": "latest",
     "date-fns": "^4.4.0",
+    "nitro": "npm:nitro-nightly@^3.0.1-20260915-165946-4f902851",
     "react": "^19.2.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.0",

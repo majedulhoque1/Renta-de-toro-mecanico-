@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { nitro } from 'nitro/vite'
 
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -17,9 +18,16 @@ import tailwindcss from '@tailwindcss/vite'
 // listening on the port anymore. Do not re-add this plugin without also
 // fixing how stdout is captured (e.g. run_in_background instead of a shell
 // redirect), or the crash returns.
+// nitro() wires the SSR build to a real hosting adapter (Vercel serverless
+// function, Node server, etc). Without it, `vite build` emits a bare
+// dist/server/server.js that nothing invokes — Vercel's zero-config "vite"
+// framework preset then deploys dist/client as a static site (JS/CSS chunks
+// only, no per-route HTML), so every real route 404s. Nitro auto-detects the
+// `VERCEL` build-machine env var and picks the vercel preset with no extra
+// config needed.
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
-  plugins: [tailwindcss(), tanstackStart(), viteReact()],
+  plugins: [tailwindcss(), tanstackStart(), nitro(), viteReact()],
 })
 
 export default config
