@@ -2,7 +2,7 @@
 // bundle at build time, so these values ship in the deployed JS regardless
 // of the .env file being gitignored — anyone who opens devtools can read
 // them. What this buys is narrower and real: the credential is out of the
-// source repo and its git history, and Filix OS isn't sitting open on a URL
+// source repo and its git history, and Felix OS isn't sitting open on a URL
 // a client wanders into mid-walkthrough. Never describe this as protection,
 // and never put anything genuinely sensitive behind it until there's a real
 // server. See muze-merch-admin-console.md for the same pattern on another project.

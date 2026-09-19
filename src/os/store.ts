@@ -38,7 +38,7 @@ function emptyData(): OSData {
     bookings: [],
     payments: [],
     checklistItems: [],
-    settings: { brandName: 'Filix', depositPercent: 50, notifyOwnerEmail: '', prices: {} },
+    settings: { brandName: 'Felix', depositPercent: 50, notifyOwnerEmail: '', prices: {} },
   }
 }
 
@@ -60,7 +60,11 @@ function readRaw(): OSData {
     return seeded
   }
   try {
-    return JSON.parse(raw) as OSData
+    const data = JSON.parse(raw) as OSData
+    // One-time rename: saved demo data from before Filix -> Felix.
+    if (data.settings?.brandName === 'Filix') data.settings.brandName = 'Felix'
+    for (const b of data.bookings ?? []) if (b.staffName === 'Filix') b.staffName = 'Felix'
+    return data
   } catch {
     return emptyData()
   }

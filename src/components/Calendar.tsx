@@ -5,7 +5,7 @@ import 'react-day-picker/style.css'
 import type { Lang } from '../lib/lang'
 
 // Same calendar pattern as the booking-crm-kit's proven BookingCalendar (used
-// across Xen and other client sites) — single-panel here since Filix books a
+// across Xen and other client sites) — single-panel here since Felix books a
 // whole event, not an appointment slot, so there's no "pick a time" side
 // panel to justify a two-column layout.
 

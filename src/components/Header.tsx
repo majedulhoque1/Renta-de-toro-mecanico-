@@ -66,9 +66,11 @@ export default function Header() {
         <div className="flex items-center gap-3">
           <a
             href={otherLangPath(pathname, lang)}
-            className="hidden rounded-full border border-[var(--cream)]/30 px-3 py-1.5 text-xs font-bold text-[var(--cream)] [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] transition hover:border-[var(--cream)] sm:inline-block"
+            aria-label={t.nav.langSwitch}
+            hrefLang={lang === 'en' ? 'es' : 'en'}
+            className="inline-block rounded-full border border-[var(--cream)]/30 px-3 py-1.5 text-xs font-bold text-[var(--cream)] [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] transition hover:border-[var(--cream)]"
           >
-            {t.nav.langSwitch}
+            {lang === 'en' ? 'ES' : 'EN'}
           </a>
           <a
             href={bookHref}

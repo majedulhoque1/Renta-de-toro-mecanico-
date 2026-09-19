@@ -2,6 +2,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { PageHeader } from '../../os/components/Shell'
+import { useT } from '../../os/i18n'
 import { findCustomer, useOS } from '../../os/store'
 
 export const Route = createFileRoute('/os/calendar')({ component: CalendarPage })
@@ -27,6 +28,7 @@ function cellKey(year: number, month: number, day: number): string {
 
 function CalendarPage() {
   const data = useOS()
+  const { t, locale } = useT()
   const [cursor, setCursor] = useState(() => {
     const d = new Date()
     d.setDate(1)
@@ -53,12 +55,12 @@ function CalendarPage() {
   return (
     <div>
       <PageHeader
-        title="Calendar"
+        title={t('Calendar')}
         action={
           <div className="flex items-center gap-3">
             <button onClick={() => setCursor(new Date(year, month - 1, 1))} className="rounded-lg border border-black/10 px-2.5 py-1 text-sm font-bold">‹</button>
             <span className="min-w-[130px] text-center text-sm font-bold">
-              {new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' }).format(cursor)}
+              {new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(cursor)}
             </span>
             <button onClick={() => setCursor(new Date(year, month + 1, 1))} className="rounded-lg border border-black/10 px-2.5 py-1 text-sm font-bold">›</button>
           </div>
@@ -67,7 +69,7 @@ function CalendarPage() {
 
       <div className="px-6 py-6">
         <div className="hidden grid-cols-7 gap-px overflow-hidden rounded-xl border border-black/10 bg-black/10 text-xs md:grid">
-          {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+          {(locale === 'es-US' ? ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'] : ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']).map((d) => (
             <div key={d} className="bg-[#f4f1ea] px-2 py-1.5 text-center font-bold text-[#1c1712]/50">{d}</div>
           ))}
           {cells.map((day, i) => {
@@ -116,7 +118,7 @@ function CalendarPage() {
                       <span>{day}</span>
                     )}
                     <span className="text-[#1c1712]/50">
-                      {new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short' }).format(new Date(year, month, day))}
+                      {new Intl.DateTimeFormat(locale, { weekday: 'short', month: 'short' }).format(new Date(year, month, day))}
                     </span>
                   </div>
                   <div className="flex flex-col gap-1">
@@ -138,7 +140,7 @@ function CalendarPage() {
               )
             })}
           {cells.every((day) => day === null || (byDay.get(cellKey(year, month, day))?.length ?? 0) === 0) && (
-            <div className="py-10 text-center text-sm text-[#1c1712]/50">No bookings this month.</div>
+            <div className="py-10 text-center text-sm text-[#1c1712]/50">{t('No bookings this month.')}</div>
           )}
         </div>
       </div>

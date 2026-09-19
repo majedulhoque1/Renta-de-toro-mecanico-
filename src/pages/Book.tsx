@@ -70,7 +70,7 @@ export function Book() {
     // Writes a real lead into the shared demo store — this is the same
     // shape submit_booking_request() will persist once Supabase exists
     // (see filix/supabase/migrations/0005_rpcs.sql). The lead shows up
-    // immediately in Filix OS's Leads list and Dashboard priorities.
+    // immediately in Felix OS's Leads list and Dashboard priorities.
     createLeadFromWizard({
       name: form.name,
       phone: form.phone,

@@ -2,11 +2,11 @@ import type { Dict } from './types'
 
 export const en: Dict = {
   meta: {
-    title: 'Filix — Mechanical Bull Rental in Minneapolis',
+    title: 'Felix — Mechanical Bull Rental in Minneapolis',
     description:
       'Mechanical bull rental in Minneapolis for birthdays, quinceañeras, baptisms and corporate events. Operator included.',
   },
-  brand: { name: 'Filix', sub: 'MINNEAPOLIS' },
+  brand: { name: 'Felix', sub: 'MINNEAPOLIS' },
   nav: { events: 'Events', how: 'How it works', packages: 'Packages', faq: 'FAQ', book: 'Book your date', langSwitch: 'Español' },
   hero: {
     eyebrow: 'Mechanical bull rental · Minneapolis',
@@ -90,7 +90,7 @@ export const en: Dict = {
   footer: {
     tagline: 'Mechanical bull rental in Minneapolis.',
     rights: 'All rights reserved.',
-    nameNote: '"Filix" is a working name, pending confirmation.',
+    nameNote: '"Felix" is a working name, pending confirmation.',
     admin: 'Admin',
   },
   sticky: { call: 'Call', whatsapp: 'WhatsApp' },

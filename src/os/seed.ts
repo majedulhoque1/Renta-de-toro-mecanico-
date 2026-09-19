@@ -103,13 +103,13 @@ const bookings: Booking[] = [
     id: 'b1', leadId: 'l7', customerId: 'c7', title: 'Cumpleaños — Roberto', eventType: 'cumpleanos',
     startAt: '2026-08-16T18:00:00.000Z', endAt: '2026-08-16T20:00:00.000Z', location: 'Minneapolis, MN',
     attendance: 25, indoorOutdoor: 'outdoor', total: 400, depositRequired: 200, status: 'completed',
-    notes: '', staffName: 'Filix', createdAt: '2026-08-05T10:00:00.000Z',
+    notes: '', staffName: 'Felix', createdAt: '2026-08-05T10:00:00.000Z',
   },
   {
     id: 'b2', leadId: null, customerId: 'c1', title: 'Quinceañera — Maria', eventType: 'quinceanera',
     startAt: '2026-09-21T19:00:00.000Z', endAt: '2026-09-21T23:00:00.000Z', location: 'Minneapolis, MN',
     attendance: 80, indoorOutdoor: 'outdoor', total: 750, depositRequired: 375, status: 'confirmed',
-    notes: 'Backyard, need generator.', staffName: 'Filix', createdAt: '2026-08-28T10:00:00.000Z',
+    notes: 'Backyard, need generator.', staffName: 'Felix', createdAt: '2026-08-28T10:00:00.000Z',
   },
   {
     id: 'b3', leadId: null, customerId: 'c3', title: 'Cumpleaños — Sandra', eventType: 'cumpleanos',
@@ -127,7 +127,7 @@ const bookings: Booking[] = [
     id: 'b5', leadId: null, customerId: 'c4', title: 'Company Picnic', eventType: 'corporativo',
     startAt: '2026-10-10T15:00:00.000Z', endAt: '2026-10-10T20:00:00.000Z', location: 'Minneapolis, MN',
     attendance: 200, indoorOutdoor: 'outdoor', total: 1400, depositRequired: 700, status: 'confirmed',
-    notes: '', staffName: 'Filix', createdAt: '2026-09-11T10:00:00.000Z',
+    notes: '', staffName: 'Felix', createdAt: '2026-09-11T10:00:00.000Z',
   },
 ]
 
@@ -166,7 +166,7 @@ export function seedData(): OSData {
     payments,
     checklistItems,
     settings: {
-      brandName: 'Filix',
+      brandName: 'Felix',
       depositPercent: 50,
       notifyOwnerEmail: '',
       prices: {},

@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { EmptyState, PageHeader, StatusBadge } from '../../os/components/Shell'
+import { useT } from '../../os/i18n'
 import { paymentStatus, type PaymentStatus } from '../../os/logic'
 import { findCustomer, useOS } from '../../os/store'
 
@@ -14,12 +15,13 @@ const GROUPS: { status: PaymentStatus; label: string }[] = [
 
 function Payments() {
   const data = useOS()
+  const { t, locale } = useT()
 
   return (
     <div>
-      <PageHeader title="Payments" sub={`${data.bookings.length} bookings`} />
+      <PageHeader title={t('Payments')} sub={`${data.bookings.length} ${t('Bookings').toLowerCase()}`} />
       {data.bookings.length === 0 ? (
-        <EmptyState text="No bookings yet." />
+        <EmptyState text={t('No bookings yet.')} />
       ) : (
         <div className="flex flex-col gap-6 px-6 py-6">
           {GROUPS.map((group) => {
@@ -30,7 +32,7 @@ function Payments() {
             if (bookings.length === 0) return null
             return (
               <div key={group.status}>
-                <h2 className="mb-2 text-xs font-bold tracking-wide text-[#1c1712]/60 uppercase">{group.label} ({bookings.length})</h2>
+                <h2 className="mb-2 text-xs font-bold tracking-wide text-[#1c1712]/60 uppercase">{t(group.label)} ({bookings.length})</h2>
                 <div className="hidden overflow-x-auto rounded-xl border border-black/10 bg-white md:block">
                   <table className="w-full min-w-[560px] text-sm">
                     <tbody>
@@ -42,11 +44,11 @@ function Payments() {
                               <Link to="/os/bookings/$id" params={{ id: b.id }} className="font-semibold hover:underline">{customer?.name}</Link>
                             </td>
                             <td className="px-4 py-3 tabular-nums text-[#1c1712]/60">
-                              {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(b.startAt))}
+                              {new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(new Date(b.startAt))}
                             </td>
                             <td className="px-4 py-3 tabular-nums">${b.total}</td>
-                            <td className="px-4 py-3 tabular-nums text-[#1c1712]/60">paid ${fin.paidTotal}</td>
-                            <td className="px-4 py-3 font-bold tabular-nums">bal ${fin.balance}</td>
+                            <td className="px-4 py-3 tabular-nums text-[#1c1712]/60">{t('paid ')}${fin.paidTotal}</td>
+                            <td className="px-4 py-3 font-bold tabular-nums">{t('bal ')}${fin.balance}</td>
                             <td className="px-4 py-3"><StatusBadge status={fin.status} /></td>
                           </tr>
                         )
@@ -70,7 +72,7 @@ function Payments() {
                           <span className="tabular-nums font-semibold">${b.total}</span>
                         </div>
                         <div className="mt-1 text-xs tabular-nums text-[#1c1712]/60">
-                          {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(new Date(b.startAt))} · paid ${fin.paidTotal} · bal ${fin.balance}
+                          {new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' }).format(new Date(b.startAt))} · {t('paid ')}${fin.paidTotal} · {t('bal ')}${fin.balance}
                         </div>
                         <div className="mt-2">
                           <StatusBadge status={fin.status} />

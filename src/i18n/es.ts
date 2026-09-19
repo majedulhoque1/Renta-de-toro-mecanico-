@@ -2,11 +2,11 @@ import type { Dict } from './types'
 
 export const es: Dict = {
   meta: {
-    title: 'Filix — Renta de Toro Mecánico en Minneapolis',
+    title: 'Felix — Renta de Toro Mecánico en Minneapolis',
     description:
       'Renta de toro mecánico en Minneapolis para cumpleaños, quinceañeras, bautizos y eventos de empresa. Operador incluido.',
   },
-  brand: { name: 'Filix', sub: 'MINNEAPOLIS' },
+  brand: { name: 'Felix', sub: 'MINNEAPOLIS' },
   nav: { events: 'Eventos', how: 'Cómo funciona', packages: 'Paquetes', faq: 'Preguntas', book: 'Reserva tu fecha', langSwitch: 'English' },
   hero: {
     eyebrow: 'Renta de toro mecánico · Minneapolis',
@@ -90,7 +90,7 @@ export const es: Dict = {
   footer: {
     tagline: 'Renta de toro mecánico en Minneapolis.',
     rights: 'Todos los derechos reservados.',
-    nameNote: '"Filix" es un nombre de trabajo, pendiente de confirmación.',
+    nameNote: '"Felix" es un nombre de trabajo, pendiente de confirmación.',
     admin: 'Admin',
   },
   sticky: { call: 'Llamar', whatsapp: 'WhatsApp' },

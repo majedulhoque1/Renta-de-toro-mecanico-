@@ -5,7 +5,7 @@ import { Shell } from '../../os/components/Shell'
 import { hasSession } from '../../os/auth'
 
 export const Route = createFileRoute('/os')({
-  head: () => ({ meta: [{ title: 'Filix OS' }] }),
+  head: () => ({ meta: [{ title: 'Felix OS' }] }),
   component: OSLayout,
 })
 

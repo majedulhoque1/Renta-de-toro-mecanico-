@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 
 import { clearSession } from '../auth'
+import { setOSLang, useT } from '../i18n'
 
 const NAV = [
   { to: '/os', label: 'Dashboard', shortLabel: 'Home', icon: 'home', exact: true, primary: true },
@@ -17,6 +18,21 @@ const PRIMARY_NAV = NAV.filter((item) => item.primary)
 const MENU_NAV = NAV.filter((item) => !item.primary)
 
 type IconName = (typeof NAV)[number]['icon'] | 'horns' | 'logout' | 'menu' | 'close'
+
+function LangToggle({ className = '' }: { className?: string }) {
+  const { lang } = useT()
+  return (
+    <button
+      type="button"
+      onClick={() => setOSLang(lang === 'en' ? 'es' : 'en')}
+      aria-label={lang === 'en' ? 'Cambiar a español' : 'Switch to English'}
+      className={`inline-flex items-center rounded-full border border-black/15 bg-white/60 p-0.5 text-[11px] font-bold ${className}`}
+    >
+      <span className={`rounded-full px-2 py-1 ${lang === 'en' ? 'bg-[#b5701c] text-white' : 'text-[#1c1712]/55'}`}>EN</span>
+      <span className={`rounded-full px-2 py-1 ${lang === 'es' ? 'bg-[#b5701c] text-white' : 'text-[#1c1712]/55'}`}>ES</span>
+    </button>
+  )
+}
 
 function NavIcon({ name, className }: { name: IconName; className?: string }) {
   const props = {
@@ -111,6 +127,7 @@ function NavIcon({ name, className }: { name: IconName; className?: string }) {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
+  const { t } = useT()
   const [menuOpen, setMenuOpen] = useState(false)
   const isActive = (item: (typeof NAV)[number]) =>
     item.exact ? pathname === item.to : pathname.startsWith(item.to)
@@ -141,12 +158,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b5701c] text-white">
               <NavIcon name="horns" className="h-[15px] w-[15px]" />
             </span>
-            <span className="font-display text-base leading-none font-black text-[#1c1712]">Filix OS</span>
+            <span className="font-display text-base leading-none font-black text-[#1c1712]">Felix OS</span>
           </div>
+          <div className="flex items-center gap-2">
+          <LangToggle />
           <button
             type="button"
             onClick={() => setMenuOpen((o) => !o)}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={menuOpen ? t('Close menu') : t('Open menu')}
             aria-expanded={menuOpen}
             className={`flex h-9 w-9 items-center justify-center rounded-full transition ${
               inMenuPage || menuOpen
@@ -156,13 +175,14 @@ export function Shell({ children }: { children: React.ReactNode }) {
           >
             <NavIcon name={menuOpen ? 'close' : 'menu'} className="h-[20px] w-[20px]" />
           </button>
+          </div>
         </div>
 
         {menuOpen && (
           <>
             <button
               type="button"
-              aria-label="Close menu"
+              aria-label={t('Close menu')}
               tabIndex={-1}
               onClick={() => setMenuOpen(false)}
               className="fixed inset-0 -z-10 cursor-default bg-black/20"
@@ -180,7 +200,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                     }`}
                   >
                     <NavIcon name={item.icon} className="h-[18px] w-[18px] shrink-0" />
-                    {item.label}
+                    {t(item.label)}
                   </Link>
                 )
               })}
@@ -191,7 +211,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-semibold text-[#1c1712]/55 active:bg-black/5"
               >
                 <NavIcon name="logout" className="h-[18px] w-[18px] shrink-0" />
-                Log out
+                {t('Log out')}
               </button>
             </div>
           </>
@@ -206,9 +226,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <NavIcon name="horns" className="h-[18px] w-[18px]" />
             </span>
             <div>
-              <div className="font-display text-lg leading-none font-black text-[#1c1712]">Filix OS</div>
+              <div className="font-display text-lg leading-none font-black text-[#1c1712]">Felix OS</div>
               <span className="mt-1 inline-block w-fit rounded-full bg-[#b5701c]/10 px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#b5701c] uppercase">
-                Demo data
+                {t('Demo data')}
               </span>
             </div>
           </div>
@@ -231,17 +251,18 @@ export function Shell({ children }: { children: React.ReactNode }) {
                       active ? 'text-white' : 'text-[#1c1712]/35 group-hover:text-[#b5701c]'
                     }`}
                   />
-                  {item.label}
+                  {t(item.label)}
                 </Link>
               )
             })}
           </nav>
+          <div className="mt-auto px-3 pb-2"><LangToggle /></div>
           <button
             type="button"
             onClick={() => { clearSession(); window.location.href = '/login' }}
-            className="mt-auto rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#1c1712]/40 transition hover:bg-black/5 hover:text-[#1c1712]/70"
+            className="rounded-lg px-3 py-2 text-left text-sm font-semibold text-[#1c1712]/40 transition hover:bg-black/5 hover:text-[#1c1712]/70"
           >
-            Log out
+            {t('Log out')}
           </button>
         </aside>
 
@@ -269,7 +290,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               <span className={`flex h-7 w-9 items-center justify-center rounded-full transition-colors ${active ? 'bg-[#b5701c]/12' : ''}`}>
                 <NavIcon name={item.icon} className="h-[18px] w-[18px]" />
               </span>
-              <span className="truncate text-[10px] font-bold leading-none">{item.shortLabel}</span>
+              <span className="truncate text-[10px] font-bold leading-none">{t(item.shortLabel)}</span>
             </Link>
           )
         })}
@@ -317,9 +338,10 @@ const STATUS_STYLES: Record<string, string> = {
 }
 
 export function StatusBadge({ status }: { status: string }) {
+  const { t } = useT()
   return (
     <span className={`inline-block rounded-full px-2.5 py-1 text-xs font-bold whitespace-nowrap ${STATUS_STYLES[status] ?? 'bg-slate-100 text-slate-700'}`}>
-      {status.replace('_', ' ')}
+      {t(status) === status ? status.replace('_', ' ') : t(status)}
     </span>
   )
 }

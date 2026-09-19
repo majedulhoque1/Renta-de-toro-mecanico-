@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       {
-        title: 'Filix — Renta de Toro Mecánico en Minneapolis',
+        title: 'Felix — Renta de Toro Mecánico en Minneapolis',
       },
       {
         name: 'description',
@@ -50,7 +50,7 @@ export const Route = createRootRoute({
 function RootDocument({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
   const lang = pathname.startsWith('/en') ? 'en' : 'es'
-  // Filix OS and the login gate replace the public chrome entirely — they
+  // Felix OS and the login gate replace the public chrome entirely — they
   // have their own shell (dense ops-console layout, not the marketing site).
   const isAppChrome = pathname.startsWith('/os') || pathname === '/login'
 

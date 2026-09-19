@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { EmptyState, PageHeader } from '../../../os/components/Shell'
+import { useT } from '../../../os/i18n'
 import { customerHistory } from '../../../os/logic'
 import { useOS } from '../../../os/store'
 
@@ -8,23 +9,24 @@ export const Route = createFileRoute('/os/customers/')({ component: Customers })
 
 function Customers() {
   const data = useOS()
+  const { t } = useT()
   const sorted = [...data.customers].sort((a, b) => a.name.localeCompare(b.name))
 
   return (
     <div>
-      <PageHeader title="Customers" sub={`${data.customers.length} total`} />
+      <PageHeader title={t('Customers')} sub={`${data.customers.length} ${t('total')}`} />
       {sorted.length === 0 ? (
-        <EmptyState text="No customers yet." />
+        <EmptyState text={t('No customers yet.')} />
       ) : (
         <div className="px-6 py-6">
           <div className="hidden overflow-x-auto rounded-xl border border-black/10 bg-white md:block">
             <table className="w-full min-w-[480px] text-sm">
               <thead>
                 <tr className="border-b border-black/10 text-left text-xs font-bold tracking-wide text-[#1c1712]/50 uppercase">
-                  <th className="px-4 py-3">Name</th>
-                  <th className="px-4 py-3">Phone</th>
-                  <th className="px-4 py-3">Events</th>
-                  <th className="px-4 py-3">Revenue</th>
+                  <th className="px-4 py-3">{t('Name')}</th>
+                  <th className="px-4 py-3">{t('Phone')}</th>
+                  <th className="px-4 py-3">{t('Events')}</th>
+                  <th className="px-4 py-3">{t('Revenue')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -37,7 +39,7 @@ function Customers() {
                           {c.name}
                         </Link>
                         {bookings.length > 1 && (
-                          <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">repeat</span>
+                          <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">{t('repeat')}</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-[#1c1712]/70">{c.phone}</td>
@@ -63,12 +65,12 @@ function Customers() {
                   <div className="flex items-center gap-2">
                     <span className="font-semibold">{c.name}</span>
                     {bookings.length > 1 && (
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">repeat</span>
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">{t('repeat')}</span>
                     )}
                   </div>
                   <div className="mt-1 text-xs text-[#1c1712]/60">{c.phone}</div>
                   <div className="mt-2 text-sm tabular-nums text-[#1c1712]/70">
-                    {bookings.length} event{bookings.length === 1 ? '' : 's'} · <span className="font-semibold text-[#1c1712]">${totalRevenue.toLocaleString()}</span>
+                    {bookings.length} {t(bookings.length === 1 ? 'event' : 'events')} · <span className="font-semibold text-[#1c1712]">${totalRevenue.toLocaleString()}</span>
                   </div>
                 </Link>
               )
