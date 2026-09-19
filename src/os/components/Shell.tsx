@@ -1,18 +1,22 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 
 import { clearSession } from '../auth'
 
 const NAV = [
-  { to: '/os', label: 'Dashboard', shortLabel: 'Home', icon: 'home', exact: true },
-  { to: '/os/leads', label: 'Leads', shortLabel: 'Leads', icon: 'funnel', exact: false },
-  { to: '/os/bookings', label: 'Bookings', shortLabel: 'Bookings', icon: 'ticket', exact: false },
-  { to: '/os/calendar', label: 'Calendar', shortLabel: 'Cal', icon: 'calendar', exact: false },
-  { to: '/os/customers', label: 'Customers', shortLabel: 'Clients', icon: 'users', exact: false },
-  { to: '/os/payments', label: 'Payments', shortLabel: 'Pay', icon: 'dollar', exact: false },
-  { to: '/os/settings', label: 'Settings', shortLabel: 'Settings', icon: 'gear', exact: false },
+  { to: '/os', label: 'Dashboard', shortLabel: 'Home', icon: 'home', exact: true, primary: true },
+  { to: '/os/leads', label: 'Leads', shortLabel: 'Leads', icon: 'funnel', exact: false, primary: true },
+  { to: '/os/bookings', label: 'Bookings', shortLabel: 'Bookings', icon: 'ticket', exact: false, primary: true },
+  { to: '/os/calendar', label: 'Calendar', shortLabel: 'Calendar', icon: 'calendar', exact: false, primary: true },
+  { to: '/os/customers', label: 'Customers', shortLabel: 'Clients', icon: 'users', exact: false, primary: false },
+  { to: '/os/payments', label: 'Payments', shortLabel: 'Pay', icon: 'dollar', exact: false, primary: false },
+  { to: '/os/settings', label: 'Settings', shortLabel: 'Settings', icon: 'gear', exact: false, primary: false },
 ] as const
 
-type IconName = (typeof NAV)[number]['icon'] | 'horns' | 'logout'
+const PRIMARY_NAV = NAV.filter((item) => item.primary)
+const MENU_NAV = NAV.filter((item) => !item.primary)
+
+type IconName = (typeof NAV)[number]['icon'] | 'horns' | 'logout' | 'menu' | 'close'
 
 function NavIcon({ name, className }: { name: IconName; className?: string }) {
   const props = {
@@ -83,6 +87,18 @@ function NavIcon({ name, className }: { name: IconName; className?: string }) {
           <circle cx="12" cy="16.5" r="1.4" fill="currentColor" stroke="none" />
         </svg>
       )
+    case 'menu':
+      return (
+        <svg {...props}>
+          <path d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      )
+    case 'close':
+      return (
+        <svg {...props}>
+          <path d="M6 6l12 12M18 6 6 18" />
+        </svg>
+      )
     case 'logout':
       return (
         <svg {...props}>
@@ -95,28 +111,91 @@ function NavIcon({ name, className }: { name: IconName; className?: string }) {
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const isActive = (item: (typeof NAV)[number]) =>
+    item.exact ? pathname === item.to : pathname.startsWith(item.to)
+  const inMenuPage = MENU_NAV.some(isActive)
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   return (
     <div className="min-h-screen bg-[#f4f1ea] text-[#1c1712]">
-      {/* Mobile top bar — sidebar (brand + logout) is hidden below md */}
-      <div
-        className="flex items-center justify-between border-b border-black/10 bg-[#f4f1ea]/95 px-4 py-3 backdrop-blur-sm md:hidden"
-        style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
-      >
-        <div className="flex items-center gap-2">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b5701c] text-white">
-            <NavIcon name="horns" className="h-[15px] w-[15px]" />
-          </span>
-          <span className="font-display text-base leading-none font-black text-[#1c1712]">Filix OS</span>
-        </div>
-        <button
-          type="button"
-          onClick={() => { clearSession(); window.location.href = '/login' }}
-          aria-label="Log out"
-          className="flex h-8 w-8 items-center justify-center rounded-full text-[#1c1712]/50 transition hover:bg-black/5 hover:text-[#1c1712]"
+      {/* Mobile top bar — sidebar (brand + menu) is hidden below md */}
+      <div className="relative z-40 md:hidden">
+        <div
+          className="flex items-center justify-between border-b border-black/10 bg-[#f4f1ea] px-4 py-3"
+          style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
         >
-          <NavIcon name="logout" className="h-[18px] w-[18px]" />
-        </button>
+          <div className="flex items-center gap-2">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b5701c] text-white">
+              <NavIcon name="horns" className="h-[15px] w-[15px]" />
+            </span>
+            <span className="font-display text-base leading-none font-black text-[#1c1712]">Filix OS</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            className={`flex h-9 w-9 items-center justify-center rounded-full transition ${
+              inMenuPage || menuOpen
+                ? 'bg-[#b5701c]/12 text-[#b5701c]'
+                : 'text-[#1c1712]/60 hover:bg-black/5 hover:text-[#1c1712]'
+            }`}
+          >
+            <NavIcon name={menuOpen ? 'close' : 'menu'} className="h-[20px] w-[20px]" />
+          </button>
+        </div>
+
+        {menuOpen && (
+          <>
+            <button
+              type="button"
+              aria-label="Close menu"
+              tabIndex={-1}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 -z-10 cursor-default bg-black/20"
+            />
+            <div className="absolute inset-x-0 top-full border-b border-black/10 bg-[#f4f1ea] px-3 py-2 shadow-lg">
+              {MENU_NAV.map((item) => {
+                const active = isActive(item)
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold ${
+                      active ? 'bg-[#b5701c] text-white' : 'text-[#1c1712]/75 active:bg-black/5'
+                    }`}
+                  >
+                    <NavIcon name={item.icon} className="h-[18px] w-[18px] shrink-0" />
+                    {item.label}
+                  </Link>
+                )
+              })}
+              <div className="my-1.5 border-t border-black/10" />
+              <button
+                type="button"
+                onClick={() => { clearSession(); window.location.href = '/login' }}
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-semibold text-[#1c1712]/55 active:bg-black/5"
+              >
+                <NavIcon name="logout" className="h-[18px] w-[18px] shrink-0" />
+                Log out
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="mx-auto flex max-w-[1400px]">
@@ -177,8 +256,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
         className="fixed inset-x-0 bottom-0 z-30 flex border-t border-black/10 bg-[#f4f1ea]/95 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur-sm md:hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        {NAV.map((item) => {
-          const active = item.exact ? pathname === item.to : pathname.startsWith(item.to)
+        {PRIMARY_NAV.map((item) => {
+          const active = isActive(item)
           return (
             <Link
               key={item.to}
